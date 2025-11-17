@@ -56,3 +56,26 @@ blood-donation-app/
 └── tailwind.config.ts
 
 
+your-project/
+├── app/
+│   ├── profile/
+│   │   └── complete/
+│   │       └── page.tsx                    # Main profile completion page
+│   ├── api/
+│   │   └── profile/
+│   │       └── route.ts                    # API endpoint
+│   └── layout.tsx                          # Add Sonner Toaster here
+├── components/
+│   └── profile/
+│       ├── PersonalInfoStep.tsx            # Step 1
+│       ├── MedicalInfoStep.tsx             # Step 2
+│       ├── LocationStep.tsx                # Step 3 (with map)
+│       ├── AvailabilityStep.tsx            # Step 4
+│       └── StepIndicator.tsx               # Progress indicator
+├── lib/
+│   ├── prisma.ts                           # Prisma client
+│   └── validations/
+│       └── profile.ts                      # Zod schemas
+├── store/
+│   └── profileStore.ts                     # Zustand store
+└── middleware.ts                           # Profile check middleware
