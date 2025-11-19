@@ -91,7 +91,7 @@ export default function MedicalInfoStep() {
             {bloodGroups.map((group) => (
               <label
                 key={group.value}
-                className="flex flex-col items-center justify-center px-4 py-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-red-500 has-[:checked]:border-red-500 has-[:checked]:bg-red-50 transition-all"
+                className="flex flex-col items-center justify-center px-4 py-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-red-500 has-checked:border-red-500 has-checked:bg-red-50 transition-all"
               >
                 <input
                   type="radio"

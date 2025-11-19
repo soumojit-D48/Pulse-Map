@@ -117,25 +117,52 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   // For routes that require a completed profile
-  if (requiresProfileCheck(req)) {
-    try {
-      // Check if profile exists and is completed
-      const profile = await prisma.profile.findUnique({
-        where: { clerkId: userId },
-        select: { profileCompleted: true }
-      });
+  // if (requiresProfileCheck(req)) {
+  //   try {
+  //     // Check if profile exists and is completed
+  //     // const profile = await prisma.profile.findUnique({
+  //     //   where: { clerkId: userId },
+  //     //   select: { profileCompleted: true }
+  //     // });
 
-      // Redirect to profile completion if profile doesn't exist or isn't completed
-      if (!profile || !profile.profileCompleted) {
-        const completeProfileUrl = new URL('/profile/complete', req.url);
-        return NextResponse.redirect(completeProfileUrl);
-      }
-    } catch (error) {
-      console.error('Error checking profile:', error);
-      // On error, redirect to profile completion to be safe
+  //     // // Redirect to profile completion if profile doesn't exist or isn't completed
+  //     // if (!profile || !profile.profileCompleted) {
+  //     //   const completeProfileUrl = new URL('/profile/complete', req.url);
+  //     //   return NextResponse.redirect(completeProfileUrl);
+  //     // }
+  //   } catch (error) {
+  //     console.error('Error checking profile:', error);
+  //     // On error, redirect to profile completion to be safe
+  //     return NextResponse.redirect(new URL('/profile/complete', req.url));
+  //   }
+  // }
+
+
+if (requiresProfileCheck(req)) {
+  try {
+    // Call your API route instead of prisma
+    const apiUrl = new URL('/api/profile', req.url);
+
+    const response = await fetch(apiUrl.toString(), {
+      headers: {
+        cookie: req.headers.get("cookie") || "",
+      },
+    });
+
+    if (!response.ok) {
       return NextResponse.redirect(new URL('/profile/complete', req.url));
     }
+
+    const { profile } = await response.json();
+
+    if (!profile || !profile.profileCompleted) {
+      return NextResponse.redirect(new URL('/profile/complete', req.url));
+    }
+  } catch (err) {
+    return NextResponse.redirect(new URL('/profile/complete', req.url));
   }
+}
+
 
   return NextResponse.next();
 });
