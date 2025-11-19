@@ -11,6 +11,15 @@ export default function SignInPage() {
           <h1 className="text-4xl font-bold text-red-600">🩸 Blood Donation</h1>
           <p className="mt-2 text-gray-600">Save lives by donating blood</p>
         </div>
+        {/* <SignIn 
+          appearance={{
+            elements: {
+              rootBox: "mx-auto",
+              card: "shadow-xl"
+            }
+          }}
+        /> */}
+
         <SignIn 
           appearance={{
             elements: {
@@ -18,6 +27,8 @@ export default function SignInPage() {
               card: "shadow-xl"
             }
           }}
+           afterSignUpUrl="/profile/complete"
+        redirectUrl="/profile/complete"
         />
       </div>
     </div>

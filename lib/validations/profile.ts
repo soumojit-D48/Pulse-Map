@@ -73,10 +73,11 @@ export const availabilitySchema = z.object({
 });
 
 // Complete Profile Schema (all steps combined)
-export const completeProfileSchema = personalInfoSchema
-  .merge(medicalInfoSchema)
-  .merge(locationSchema)
-  .merge(availabilitySchema);
+export const completeProfileSchema = 
+  personalInfoSchema
+    .merge(medicalInfoSchema)
+    .merge(locationSchema)
+    .merge(availabilitySchema);
 
 // Type inference
 export type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;

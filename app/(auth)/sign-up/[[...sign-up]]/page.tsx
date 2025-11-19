@@ -18,6 +18,9 @@ export default function SignUpPage() {
               card: "shadow-xl"
             }
           }}
+
+          afterSignUpUrl="/profile/complete"
+        redirectUrl="/profile/complete"
         />
       </div>
     </div>
