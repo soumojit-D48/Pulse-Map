@@ -34,6 +34,10 @@
   --ring: 0 72% 51%;
   --radius: 0.75rem;
   
+  /* Success color for "Available" status */
+  --success: 142 76% 36%;
+  --success-foreground: 0 0% 100%;
+  
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, hsl(350 89% 60%), hsl(0 72% 51%));
   --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(350 100% 97%) 50%, hsl(0 100% 96%) 100%);
@@ -41,6 +45,7 @@
   /* Shadows */
   --shadow-glow: 0 10px 40px -10px hsl(0 72% 51% / 0.3);
   --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.1);
+  --shadow-hover: 0 8px 30px -4px hsl(0 0% 0% / 0.15);
   
   /* Transitions */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -66,7 +71,7 @@
   --muted: 0 0% 14%;
   --muted-foreground: 0 0% 65%;
   
-  --accent: 350 89% 60%;
+  --accent: 142 76% 36%;
   --accent-foreground: 0 0% 100%;
   
   --destructive: 0 62% 50%;
@@ -76,6 +81,10 @@
   --input: 0 0% 20%;
   --ring: 0 72% 51%;
   
+  /* Success color for "Available" status - same as accent in dark mode */
+  --success: 142 76% 36%;
+  --success-foreground: 0 0% 100%;
+  
   /* Dark Gradients */
   --gradient-primary: linear-gradient(135deg, hsl(350 89% 60%), hsl(0 72% 51%));
   --gradient-hero: linear-gradient(135deg, hsl(0 0% 7%) 0%, hsl(350 100% 8%) 50%, hsl(0 50% 10%) 100%);
@@ -83,6 +92,7 @@
   /* Dark Shadows */
   --shadow-glow: 0 10px 40px -10px hsl(0 72% 51% / 0.5);
   --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.5);
+  --shadow-hover: 0 12px 40px -6px hsl(0 0% 0% / 0.7);
 }
 
 /* Base Styles */
@@ -120,6 +130,10 @@ input {
   box-shadow: var(--shadow-glow);
 }
 
+.shadow-hover {
+  box-shadow: var(--shadow-hover);
+}
+
 /* Color utilities */
 .text-primary {
   color: hsl(var(--primary));
@@ -139,6 +153,10 @@ input {
 
 .text-accent {
   color: hsl(var(--accent));
+}
+
+.text-success {
+  color: hsl(var(--success));
 }
 
 .text-muted-foreground {
@@ -190,6 +208,14 @@ input {
   background-color: hsl(var(--accent) / 0.1);
 }
 
+.bg-success {
+  background-color: hsl(var(--success));
+}
+
+.bg-success\/10 {
+  background-color: hsl(var(--success) / 0.1);
+}
+
 .bg-muted {
   background-color: hsl(var(--muted));
 }
@@ -235,6 +261,10 @@ input {
   border-color: hsl(var(--accent));
 }
 
+.border-success {
+  border-color: hsl(var(--success));
+}
+
 /* Ring utilities */
 .ring-primary {
   --tw-ring-color: hsl(var(--primary));
@@ -278,8 +308,24 @@ input {
   box-shadow: var(--shadow-glow);
 }
 
+.hover\:shadow-hover:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.hover\:shadow-soft:hover {
+  box-shadow: var(--shadow-soft);
+}
+
 .hover\:bg-destructive\/10:hover {
   background-color: hsl(var(--destructive) / 0.1);
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.hover\:border-primary:hover {
+  border-color: hsl(var(--primary));
 }
 
 /* Group hover utilities */
@@ -291,20 +337,9 @@ input {
   transform: translateX(0.25rem);
 }
 
-/* Container utilities */
-/* .container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
+.group:hover .group-hover\:shadow-glow {
+  box-shadow: var(--shadow-glow);
 }
-
-@media (min-width: 1400px) {
-  .container {
-    max-width: 1400px;
-  }
-} */
 
 /* Flexbox utilities */
 .shrink-0 {
@@ -317,6 +352,11 @@ input {
   -webkit-backdrop-filter: blur(12px);
 }
 
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 /* Background clip text utility */
 .bg-clip-text {
   -webkit-background-clip: text;
@@ -325,6 +365,19 @@ input {
 
 .text-transparent {
   color: transparent;
+}
+
+/* Transition utilities */
+.transition-all {
+  transition: var(--transition-smooth);
+}
+
+.transition-transform {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-shadow {
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Animations */
@@ -352,4 +405,17 @@ input {
 
 .animate-accordion-up {
   animation: accordion-up 0.2s ease-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
