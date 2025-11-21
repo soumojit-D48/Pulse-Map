@@ -327,7 +327,7 @@ model Response {
   donor     Profile   @relation(fields: [donorId], references: [id], onDelete: Cascade)
   
   status    ResponseStatus @default(PENDING)
-  message   String?   @db.Text
+  message   String?   @db.Text // any msg the donor can send to the reciver 
   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
