@@ -39,7 +39,7 @@ const Navbar = () => {
               <Droplet className="w-6 h-6 text-primary-foreground" fill="currentColor" />
             </div>
             <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              LifeLink
+              Pulse Map
             </span>
           </motion.div>
 

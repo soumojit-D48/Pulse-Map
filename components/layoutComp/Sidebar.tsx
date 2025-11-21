@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Users, FileText, Heart, User, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import BloodGroupBadge from '../dashboard/BloodGroupBAdge';
+import BloodGroupBadge from '../dashboard/BloodGroupBadge';
 
 interface SidebarProps {
   profile: {
@@ -37,7 +37,7 @@ export default function Sidebar({ profile }: SidebarProps) {
         onClick={() => setMobileOpen(!mobileOpen)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow-lg"
       >
-        {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+        {mobileOpen ? <X size={22} /> : <Menu size={24} />}
       </button>
 
       {/* Sidebar */}
@@ -56,7 +56,7 @@ export default function Sidebar({ profile }: SidebarProps) {
               <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white fill-current" />
               </div>
-              <span className="text-xl font-bold text-gray-900">BloodLink</span>
+              <span className="text-xl font-bold text-gray-900">Pulse Map</span>
             </div>
           </div>
 
@@ -83,16 +83,14 @@ export default function Sidebar({ profile }: SidebarProps) {
                 <div className="flex items-center gap-2 mt-1">
                   <BloodGroupBadge bloodGroup={profile.bloodGroup} size="sm" />
                   <span
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                      profile.available
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${profile.available
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-800'
-                    }`}
+                      }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        profile.available ? 'bg-green-600' : 'bg-gray-600'
-                      }`}
+                      className={`w-1.5 h-1.5 rounded-full ${profile.available ? 'bg-green-600' : 'bg-gray-600'
+                        }`}
                     />
                     {profile.available ? 'Available' : 'Unavailable'}
                   </span>
@@ -113,10 +111,9 @@ export default function Sidebar({ profile }: SidebarProps) {
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                     transition-colors duration-150
-                    ${
-                      isActive
-                        ? 'bg-red-50 text-red-600'
-                        : 'text-gray-700 hover:bg-gray-100'
+                    ${isActive
+                      ? 'bg-red-50 text-red-600'
+                      : 'text-gray-700 hover:bg-gray-100'
                     }
                   `}
                 >
