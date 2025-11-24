@@ -80,15 +80,18 @@ export async function GET(req: Request) {
 
         return {
           ...request,
-          distance,
-          canUserDonate,
-          responseCount: request.responses.length,
+          distance, // btw user and the req user
+          canUserDonate, // blood group check
+          responseCount: request.responses.length, // till now how many responses
         };
       })
       .filter((request) => request.distance <= radiusKm)
       .sort((a, b) => a.distance - b.distance); // Sort by nearest first
 
+      
     return NextResponse.json({ requests: requestsWithDistance });
+
+
   } catch (error) {
     console.error('Nearby requests error:', error);
     return NextResponse.json(
