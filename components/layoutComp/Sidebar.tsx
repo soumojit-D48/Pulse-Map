@@ -12,7 +12,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, FileText, Heart, User, Menu, X, Plus } from 'lucide-react';
+import { Home, Users, FileText, Heart, User, Menu, X, Plus, HeartHandshake, PlusCircle, MapPin, Inbox } from 'lucide-react';
 import { useState } from 'react';
 import BloodGroupBadge from '../dashboard/BloodGroupBadge';
 
@@ -26,12 +26,24 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: 'Dashboard', href: '/home', icon: Home },
-  { name: 'Find Donors', href: '/donors', icon: Users },
-  { name: 'My Requests', href: '/requests', icon: FileText },
-  { name: 'Donations', href: '/donation-history', icon: Heart },
-  { name: 'Profile', href: '/profile', icon: User },
-  { name: 'Create Request', href: '/requests/new', icon: Plus },
+  // { name: 'Dashboard', href: '/home', icon: Home },
+  // { name: 'Find Donors', href: '/donors', icon: Users },
+  // { name: 'My Requests', href: '/requests', icon: FileText },
+  // { name: 'Donations', href: '/donation-history', icon: Heart },
+  // { name: 'Profile', href: '/profile', icon: User },
+  // { name: 'Create Request', href: '/requests/new', icon: Plus },
+  // { name: 'Nearby Requests', href: 'nearby-requests', icon: Plus },
+  // { name: 'My Responses', href: '/responses', icon: Plus },
+
+  
+  { name: "Dashboard", href: "/home", icon: Home },
+  { name: "Find Donors", href: "/donors", icon: Users },
+  { name: "My Requests", href: "/requests", icon: FileText },
+  { name: "Donations", href: "/donation-history", icon: HeartHandshake },
+  { name: "Create Request", href: "/requests/new", icon: PlusCircle },
+  { name: "Nearby Requests", href: "/nearby-requests", icon: MapPin },
+  { name: "My Responses", href: "/responses", icon: Inbox },
+  { name: "Profile", href: "/profile", icon: User },
 
 ];
 
