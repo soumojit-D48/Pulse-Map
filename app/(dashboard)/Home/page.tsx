@@ -1,109 +1,4 @@
 
-// // app/(dashboard)/home/page.tsx
-// import { auth } from '@clerk/nextjs/server';
-// import  prisma  from '@/lib/prisma';
-
-// export default async function DashboardHomePage() {
-//   const { userId } = await auth();
-
-//   const profile = await prisma.profile.findUnique({
-//     where: { clerkId: userId! },
-//   });
-
-//   return (
-//     <div className="space-y-6">
-//       {/* Welcome Section */}
-//       <div>
-//         <h1 className="text-3xl font-bold text-gray-900">
-//           Welcome back, {profile?.name}! 👋
-//         </h1>
-//         <p className="text-gray-600 mt-2">
-//           Here's what's happening with blood donation in your area
-//         </p>
-//       </div>
-
-//       {/* Stats Cards - We'll build these in Step 9 */}
-//       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-//         <div className="bg-white rounded-lg shadow p-6">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-sm font-medium text-gray-600">Total Donations</p>
-//               <p className="text-3xl font-bold text-gray-900 mt-2">0</p>
-//             </div>
-//             <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-//               <span className="text-2xl">🩸</span>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="bg-white rounded-lg shadow p-6">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-sm font-medium text-gray-600">Active Requests</p>
-//               <p className="text-3xl font-bold text-gray-900 mt-2">0</p>
-//             </div>
-//             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-//               <span className="text-2xl">📋</span>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="bg-white rounded-lg shadow p-6">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-sm font-medium text-gray-600">Nearby Donors</p>
-//               <p className="text-3xl font-bold text-gray-900 mt-2">0</p>
-//             </div>
-//             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-//               <span className="text-2xl">👥</span>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Emergency Requests - Placeholder */}
-//       <div className="bg-white rounded-lg shadow">
-//         <div className="p-6 border-b border-gray-200">
-//           <h2 className="text-xl font-semibold text-gray-900">
-//             Emergency Requests Near You
-//           </h2>
-//           <p className="text-sm text-gray-600 mt-1">
-//             Help someone in need today
-//           </p>
-//         </div>
-//         <div className="p-6">
-//           <div className="text-center py-12">
-//             <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
-//               <span className="text-3xl">🔍</span>
-//             </div>
-//             <p className="text-gray-600">No emergency requests nearby</p>
-//             <p className="text-sm text-gray-500 mt-1">
-//               We'll notify you when someone needs your blood type
-//             </p>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // app/(dashboard)/home/page.tsx
 'use client';
@@ -115,7 +10,7 @@ import RequestCard from '@/components/dashboard/RequestCard';
 import Link from 'next/link';
 
 interface DashboardStats {
-  totalDonations: number;
+  totalDonations: number; // all
   activeRequests: number;
   nearbyDonors: number;
 }
@@ -142,78 +37,140 @@ export default function DashboardHomePage() {
   });
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
   const [filterBloodGroup, setFilterBloodGroup] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchData();
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
+    fetchRequests();
   }, [filterBloodGroup]);
 
-  const fetchData = async () => {
+  const fetchStats = async () => {
+    try {
+      setStatsLoading(true);
+      const statsRes = await fetch('/api/dashboard/stats');
+      console.log(statsRes, "sdjsjk");
+      
+      
+      if (!statsRes.ok) {
+        throw new Error('Failed to fetch statistics');
+      }
+      
+      const statsData = await statsRes.json();
+      console.log(statsData, "data");
+      
+      setStats(statsData);
+    } catch (error) {
+      console.error('Failed to fetch dashboard stats:', error);
+      setError('Failed to load dashboard statistics');
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
+  const fetchRequests = async () => {
     try {
       setLoading(true);
-
-      // Fetch stats
-      const statsRes = await fetch('/api/dashboard/stats');
-      const statsData = await statsRes.json();
-      setStats(statsData);
-
-      // Fetch nearby requests
       const requestsRes = await fetch(
         `/api/requests/nearby?radius=50${filterBloodGroup ? `&bloodGroup=${filterBloodGroup}` : ''}`
       );
+      
+      if (!requestsRes.ok) {
+        throw new Error('Failed to fetch requests');
+      }
+      
       const requestsData = await requestsRes.json();
       setRequests(requestsData.requests || []);
+      console.log(requestsData.requests, "rrrr");
+      
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
+      console.error('Failed to fetch requests:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResponseSuccess = () => {
+    // Refresh requests after successful response
+    fetchRequests();
+    
+    
   };
 
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard 👋</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-3xl font-bold text-foreground">Dashboard 👋</h1>
+        <p className="text-muted-foreground mt-2">
           Here's what's happening with blood donation in your area
         </p>
       </div>
 
+      {/* Error Message */}
+      {error && (
+        <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatsCard
-          title="Total Donations"
-          value={stats.totalDonations}
-          icon={Heart}
-          iconBgColor="bg-red-100"
-          iconColor="text-red-600"
-        />
-        <StatsCard
-          title="Active Requests"
-          value={stats.activeRequests}
-          icon={FileText}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatsCard
-          title="Nearby Donors"
-          value={stats.nearbyDonors}
-          icon={Users}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
+        {statsLoading ? (
+          // Loading skeletons for stats
+          <>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-card rounded-lg shadow-soft p-6 animate-pulse">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="h-4 bg-muted rounded w-1/2 mb-3"></div>
+                    <div className="h-8 bg-muted rounded w-3/4"></div>
+                  </div>
+                  <div className="w-12 h-12 bg-muted rounded-lg"></div>
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            <StatsCard
+              title="Total Donations"
+              value={stats.totalDonations}
+              icon={Heart}
+              iconBgColor="bg-red-100"
+              iconColor="text-red-600"
+            />
+            <StatsCard
+              title="Active Requests"
+              value={stats.activeRequests}
+              icon={FileText}
+              iconBgColor="bg-blue-100"
+              iconColor="text-blue-600"
+            />
+            <StatsCard
+              title="Nearby Donors"
+              value={stats.nearbyDonors}
+              icon={Users}
+              iconBgColor="bg-green-100"
+              iconColor="text-green-600"
+            />
+          </>
+        )}
       </div>
 
       {/* Emergency Requests Section */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6 border-b border-gray-200">
+      <div className="bg-card rounded-lg shadow-soft">
+        <div className="p-6 border-b border-border">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-card-foreground">
                 Emergency Requests Near You
               </h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Help someone in need today
               </p>
             </div>
@@ -222,7 +179,7 @@ export default function DashboardHomePage() {
               <select
                 value={filterBloodGroup}
                 onChange={(e) => setFilterBloodGroup(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 ring-primary focus:border-transparent"
               >
                 <option value="">All Blood Groups</option>
                 <option value="A_POSITIVE">A+</option>
@@ -237,7 +194,7 @@ export default function DashboardHomePage() {
 
               <Link
                 href="/requests/new"
-                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary-dark transition shadow-glow"
               >
                 + Create Request
               </Link>
@@ -248,26 +205,30 @@ export default function DashboardHomePage() {
         <div className="p-6">
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-600 mt-4">Loading requests...</p>
+              <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              <p className="text-muted-foreground mt-4">Loading requests...</p>
             </div>
           ) : requests.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {requests.map((request) => (
-                <RequestCard key={request.id} request={request} />
+                <RequestCard
+                  key={request.id}
+                  request={request}
+                  onResponseSuccess={handleResponseSuccess}
+                />
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-muted rounded-full mx-auto flex items-center justify-center mb-4">
                 <span className="text-3xl">🔍</span>
               </div>
-              <p className="text-gray-600">
+              <p className="text-card-foreground">
                 {filterBloodGroup
                   ? `No ${filterBloodGroup.replace('_', ' ')} requests nearby`
                   : 'No emergency requests nearby'}
               </p>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 We'll notify you when someone needs your blood type
               </p>
             </div>

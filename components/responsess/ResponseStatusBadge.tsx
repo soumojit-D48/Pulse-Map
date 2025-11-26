@@ -24,6 +24,7 @@ const statusConfig = {
   },
 };
 
+// donor after response to a request
 export default function ResponseStatusBadge({
   status,
   size = 'md',

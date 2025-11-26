@@ -6,13 +6,15 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, MapPin, Phone, Calendar, User } from 'lucide-react';
+import { ArrowLeft, MapPin, Phone, User } from 'lucide-react';
 import BloodGroupBadge from '@/components/dashboard/BloodGroupBadge';
 import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
 import { toast } from 'sonner';
 
 import DonateButton from '@/components/responsess/DonateButton';
 import ResponseStatusBadge from '@/components/responsess/ResponseStatusBadge';
+import ResponseActions from '@/components/responsess/ResponseAction';
+import DonorResponseActions from '@/components/responsess/DonorResponseActions';
 
 interface RequestDetail {
   id: string;
@@ -50,6 +52,7 @@ interface RequestResponse {
   isCreator: boolean;
   hasResponded: boolean;
   canUserDonate: boolean;
+  userProfileId?: string; // To check if user is the donor
 }
 
 export default function RequestDetailPage() {
@@ -59,12 +62,9 @@ export default function RequestDetailPage() {
   const [isCreator, setIsCreator] = useState(false);
   const [hasResponded, setHasResponded] = useState(false);
   const [canUserDonate, setCanUserDonate] = useState(false);
+  const [userProfileId, setUserProfileId] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-
-
-  console.log("PARAMS:", params);
-    console.log("PARAM ID:", params.id);
 
   useEffect(() => {
     if (params.id) {
@@ -72,56 +72,22 @@ export default function RequestDetailPage() {
     }
   }, [params.id]);
 
-//   console.log(params?.id?.trim(), "iddddd");
-
-  console.log("RAW PARAM ID:", params.id);
-
-// const id = Array.isArray(params.id) ? params.id[0] : params.id;
-
-// const cleanId = id.trim();
-
-// console.log("CLEAN ID:", cleanId);
-
-  
-
   const fetchRequestDetail = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/requests/${params?.id}`);
+      const response = await fetch(`/api/requests/${params.id}`);
       if (!response.ok) throw new Error('Request not found');
       const data: RequestResponse = await response.json();
       setRequest(data.request);
       setIsCreator(data.isCreator);
       setHasResponded(data.hasResponded);
       setCanUserDonate(data.canUserDonate || false);
+      setUserProfileId(data.userProfileId || '');
     } catch (error) {
       console.error('Failed to fetch request:', error);
       toast.error('Failed to load request details');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleMarkAsFulfilled = async () => {
-    if (!confirm('Are you sure you want to mark this request as fulfilled?')) return;
-
-    setActionLoading(true);
-    try {
-      const response = await fetch(`/api/requests/${params?.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'FULFILLED' }),
-      });
-
-      if (!response.ok) throw new Error('Failed to update request');
-
-      toast.success('Request marked as fulfilled!');
-      router.push('/requests');
-    } catch (error) {
-      toast.error('Failed to update request');
-      console.error(error);
-    } finally {
-      setActionLoading(false);
     }
   };
 
@@ -289,40 +255,72 @@ export default function RequestDetailPage() {
 
         {request.responses.length > 0 ? (
           <div className="space-y-3">
-            {request.responses.map((response) => (
-              <div
-                key={response.id}
-                className="bg-muted/30 rounded-lg p-4 border border-border"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                      <span className="text-primary font-semibold text-lg">
-                        {response.donor.name.charAt(0)}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-card-foreground">{response.donor.name}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <BloodGroupBadge bloodGroup={response.donor.bloodGroup} size="sm" />
-                        <span className="text-sm text-muted-foreground">{response.donor.phone}</span>
+            {request.responses.map((response) => {
+              const isDonor = userProfileId === response.donor.id;
+              
+              return (
+                <div
+                  key={response.id}
+                  className="bg-muted/30 rounded-lg p-4 border border-border"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <span className="text-primary font-semibold text-lg">
+                          {response.donor.name.charAt(0)}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-card-foreground">
+                          {response.donor.name}
+                          {isDonor && (
+                            <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                              You
+                            </span>
+                          )}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <BloodGroupBadge bloodGroup={response.donor.bloodGroup} size="sm" />
+                          <span className="text-sm text-muted-foreground">{response.donor.phone}</span>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <ResponseStatusBadge status={response.status} size="sm" />
+                      
+                      {/* Show ResponseActions for request creator */}
+                      {isCreator && request.status === 'ACTIVE' && (
+                        <ResponseActions
+                          responseId={response.id}
+                          donorName={response.donor.name}
+                          donorPhone={response.donor.phone}
+                          status={response.status}
+                          onSuccess={fetchRequestDetail}
+                        />
+                      )}
+                      
+                      {/* Show DonorResponseActions for the donor */}
+                      {isDonor && !isCreator && (
+                        console.log(isDonor, "d"),
+                        console.log( isCreator,"r"),
+                        
+                        <DonorResponseActions
+                          responseId={response.id}
+                          currentMessage={response.message}
+                          status={response.status}
+                          onSuccess={fetchRequestDetail}
+                        />
+                      )}
+                    </div>
                   </div>
-                  <a
-                    href={`tel:${response.donor.phone}`}
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary-dark transition"
-                  >
-                    Call Donor
-                  </a>
+                  {response.message && (
+                    <p className="text-sm text-muted-foreground mt-3 pl-15 italic">
+                      "{response.message}"
+                    </p>
+                  )}
                 </div>
-                {response.message && (
-                  <p className="text-sm text-muted-foreground mt-3 pl-15">
-                    "{response.message}"
-                  </p>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-8">
@@ -331,28 +329,36 @@ export default function RequestDetailPage() {
             </div>
             <p className="text-card-foreground">No responses yet</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Nearby donors will be notified about your request
+              Nearby donors will be notified about this request
             </p>
           </div>
         )}
       </div>
 
-      {/* Actions */}
-      {request.status === 'ACTIVE' && (
+      {/* Donate Button (for non-creators) */}
+      {!isCreator && request.status === 'ACTIVE' && (
+        <div className="bg-card rounded-lg shadow-soft p-6">
+          <h2 className="text-xl font-semibold text-card-foreground mb-4">
+            Want to Help?
+          </h2>
+          <DonateButton
+            requestId={request.id}
+            canUserDonate={canUserDonate}
+            hasResponded={hasResponded}
+            onSuccess={fetchRequestDetail}
+          />
+        </div>
+      )}
+
+      {/* Actions (for creators - only if no responses) */}
+      {isCreator && request.status === 'ACTIVE' && request.responses.length === 0 && (
         <div className="flex gap-4">
-          <button
-            onClick={handleMarkAsFulfilled}
-            disabled={actionLoading}
-            className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary-dark transition disabled:opacity-50"
-          >
-            {actionLoading ? 'Updating...' : 'Mark as Fulfilled'}
-          </button>
           <button
             onClick={handleCancelRequest}
             disabled={actionLoading}
-            className="px-6 py-3 border-2 border-destructive text-destructive rounded-lg font-semibold hover:bg-destructive/10 transition disabled:opacity-50"
+            className="flex-1 px-6 py-3 border-2 border-destructive text-destructive rounded-lg font-semibold hover:bg-destructive/10 transition disabled:opacity-50"
           >
-            Cancel Request
+            {actionLoading ? 'Cancelling...' : 'Cancel Request'}
           </button>
         </div>
       )}

@@ -26,7 +26,8 @@ export default function ResponseActions({
   const [showAcceptConfirm, setShowAcceptConfirm] = useState(false);
   const [showDeclineConfirm, setShowDeclineConfirm] = useState(false);
 
-  const handleAccept = async () => {
+  // the perosn who requested
+  const handleAccept = async () => { 
     setLoading(true);
     try {
       const response = await fetch(`/api/responses/${responseId}`, {

@@ -14,6 +14,7 @@ interface DonateButtonProps {
   onSuccess?: () => void;
 }
 
+// view details
 export default function DonateButton({
   requestId,
   canUserDonate,

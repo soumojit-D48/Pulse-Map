@@ -177,7 +177,157 @@ export async function GET(req: Request) {
 
 
 
+// PATCH - Update request
+export async function PATCH(req: Request) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url); // check status, it should active 
+    const requestId = searchParams.get('id'); // the id of that req to be updated
+
+    if (!requestId) {
+      return NextResponse.json({ error: 'Request ID is required' }, { status: 400 });
+    }
+
+    const profile = await prisma.profile.findUnique({
+      where: { clerkId: userId },
+      select: { id: true },
+    });
+
+    if (!profile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    }
+
+    // Check if request exists and belongs to user
+    const existingRequest = await prisma.request.findUnique({
+      where: { id: requestId },
+      select: { createdById: true, status: true },
+    });
+
+    if (!existingRequest) {
+      return NextResponse.json({ error: 'Request not found' }, { status: 404 });
+    }
+
+    if (existingRequest.createdById !== profile.id) {
+      return NextResponse.json({ error: 'Unauthorized to update this request' }, { status: 403 });
+    }
+
+    // Can't update fulfilled or cancelled requests
+    if (existingRequest.status !== 'ACTIVE') {
+      return NextResponse.json(
+        { error: 'Cannot update non-active requests' },
+        { status: 400 }
+      );
+    }
+
+    const body = await req.json();
+    
+    // Validate update data (partial validation)
+    const updateData: any = {};
+    
+    if (body.patientName) updateData.patientName = body.patientName;
+    if (body.bloodGroup) updateData.bloodGroup = body.bloodGroup;
+    if (body.contactPhone) updateData.contactPhone = body.contactPhone;
+    if (body.urgency) updateData.urgency = body.urgency;
+    if (body.unitsNeeded) updateData.unitsNeeded = body.unitsNeeded;
+    if (body.hospitalName !== undefined) updateData.hospitalName = body.hospitalName || null;
+    if (body.notes !== undefined) updateData.notes = body.notes || null;
+    if (body.patientLatitude) updateData.patientLatitude = body.patientLatitude;
+    if (body.patientLongitude) updateData.patientLongitude = body.patientLongitude;
+    if (body.patientLocationName) updateData.patientLocationName = body.patientLocationName;
+
+    const updatedRequest = await prisma.request.update({
+      where: { id: requestId },
+      data: updateData,
+      include: {
+        responses: {
+          include: {
+            donor: {
+              select: {
+                id: true,
+                name: true,
+                phone: true,
+                bloodGroup: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      request: updatedRequest,
+    });
+  } catch (error) {
+    console.error('Update request error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
 
 
 
+// DELETE - Delete request
+export async function DELETE(req: Request) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const requestId = searchParams.get('id');
+
+    if (!requestId) {
+      return NextResponse.json({ error: 'Request ID is required' }, { status: 400 });
+    }
+
+    const profile = await prisma.profile.findUnique({
+      where: { clerkId: userId },
+      select: { id: true },
+    });
+
+    if (!profile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    }
+
+    // Check if request exists and belongs to user
+    const existingRequest = await prisma.request.findUnique({
+      where: { id: requestId },
+      select: { createdById: true },
+    });
+
+    if (!existingRequest) {
+      return NextResponse.json({ error: 'Request not found' }, { status: 404 });
+    }
+
+    if (existingRequest.createdById !== profile.id) {
+      return NextResponse.json({ error: 'Unauthorized to delete this request' }, { status: 403 });
+    }
+
+    // Delete the request (cascading will handle responses and donations)
+    await prisma.request.delete({
+      where: { id: requestId },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Request deleted successfully',
+    });
+  } catch (error) {
+    console.error('Delete request error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
 

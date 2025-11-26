@@ -7,6 +7,7 @@ interface UrgencySelectorProps {
   onChange: (value: string) => void;
 }
 
+// for the form /new
 const urgencyOptions = [
   {
     value: 'CRITICAL',

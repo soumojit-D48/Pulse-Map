@@ -1,12 +1,16 @@
+
+
+
 // app/(dashboard)/requests/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Filter } from 'lucide-react';
+import { Plus, Filter, Trash2, Edit } from 'lucide-react';
 import BloodGroupBadge from '@/components/dashboard/BloodGroupBadge';
 import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
-import { formatDistance } from '@/lib/utils/distance';
+import EditRequestDialog from '@/components/requests/EditRequestDialog';
+import DeleteRequestDialog from '@/components/requests/DeleteRequestDialog';
 
 interface Request {
   id: string;
@@ -19,6 +23,9 @@ interface Request {
   contactPhone: string;
   status: string;
   createdAt: string;
+  patientLatitude?: number;
+  patientLongitude?: number;
+  notes?: string | null;
   responses: {
     id: string;
     donor: {
@@ -34,6 +41,15 @@ export default function RequestsPage() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'FULFILLED' | 'CANCELLED'>('ALL');
+  
+  // Edit dialog state
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
+  
+  // Delete dialog state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteRequestId, setDeleteRequestId] = useState<string | null>(null);
+  const [deletePatientName, setDeletePatientName] = useState<string>('');
 
   useEffect(() => {
     fetchRequests();
@@ -51,6 +67,25 @@ export default function RequestsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEditClick = (request: Request) => {
+    setSelectedRequest(request);
+    setEditDialogOpen(true);
+  };
+
+  const handleDeleteClick = (request: Request) => {
+    setDeleteRequestId(request.id);
+    setDeletePatientName(request.patientName);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleEditSuccess = () => {
+    fetchRequests(); // Refresh the list
+  };
+
+  const handleDeleteSuccess = () => {
+    fetchRequests(); // Refresh the list
   };
 
   const getStatusBadge = (status: string) => {
@@ -240,26 +275,33 @@ export default function RequestsPage() {
               </div>
 
               {/* Actions */}
-              {request.status === 'ACTIVE' && (
-                <div className="flex gap-2 mt-4 pt-4 border-t border-border">
-                  <Link
-                    href={`/requests/${request.id}`}
-                    className="flex-1 px-4 py-2 bg-muted text-card-foreground text-center rounded-lg font-medium hover:bg-muted/80 transition"
-                  >
-                    View Details
-                  </Link>
-                  <button
-                    className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary-dark transition"
-                  >
-                    Mark as Fulfilled
-                  </button>
-                  <button
-                    className="px-4 py-2 border border-destructive text-destructive rounded-lg font-medium hover:bg-destructive/10 transition"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
+              <div className="flex gap-2 mt-4 pt-4 border-t border-border">
+                <Link
+                  href={`/requests/${request.id}`}
+                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground text-center rounded-lg font-medium hover:bg-primary-dark transition"
+                >
+                  View Details
+                </Link>
+                
+                {request.status === 'ACTIVE' && (
+                  <>
+                    <button
+                      onClick={() => handleEditClick(request)}
+                      className="px-4 py-2 bg-muted text-card-foreground rounded-lg font-medium hover:bg-muted/80 transition inline-flex items-center gap-2"
+                    >
+                      <Edit size={16} />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(request)}
+                      className="px-4 py-2 border border-destructive text-destructive rounded-lg font-medium hover:bg-destructive/10 transition inline-flex items-center gap-2"
+                    >
+                      <Trash2 size={16} />
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -283,6 +325,23 @@ export default function RequestsPage() {
           </Link>
         </div>
       )}
+
+      {/* Edit Dialog */}
+      <EditRequestDialog
+        request={selectedRequest}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSuccess={handleEditSuccess}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteRequestDialog
+        requestId={deleteRequestId}
+        patientName={deletePatientName}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 }

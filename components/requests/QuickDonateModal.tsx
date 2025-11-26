@@ -4,6 +4,9 @@
 // components/requests/QuickDonateModal.tsx
 'use client';
 
+// have to fix should show the req taht he can donate
+// he shouln't donate his own req,*** but here he can see
+
 import { useState } from 'react';
 import { Heart, X } from 'lucide-react';
 import { toast } from 'sonner';

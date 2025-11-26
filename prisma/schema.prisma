@@ -1,210 +1,23 @@
 
 
 
-// generator client {
-//   provider = "prisma-client-js"
-//   output   = "../app/generated/prisma"
-// }
-
-// datasource db {
-//   provider  = "postgresql"
-//   url       = env("DATABASE_URL")
-//   directUrl = env("DIRECT_URL")
-// }
-
-// // ============================================
-// // 1. PROFILE TABLE (User Information)
-// // ============================================
-// model Profile {
-//   id               String    @id @default(cuid())
-//   clerkId          String    @unique        // Links to Clerk authentication
-//   email            String    @unique
-//   name             String
-//   phone            String?
-//   bloodGroup       BloodGroup
-//   age              Int
-//   gender           Gender
-  
-//   // Location fields
-//   latitude         Float
-//   longitude        Float
-//   locationName     String
-  
-//   // Donor availability
-//   available        Boolean   @default(false)
-//   lastDonationDate DateTime?
-  
-//   role             Role      @default(DONOR)
-//   avatarUrl        String?
-//   profileCompleted Boolean   @default(false)
-  
-//   createdAt        DateTime  @default(now())
-//   updatedAt        DateTime  @updatedAt
-  
-//   // Relations
-//   donationsGiven   Donation[] 
-//   requestsCreated  Request[]  @relation("RequestCreator")
-//   responses        Response[]
-  
-//   @@index([clerkId])
-//   @@index([bloodGroup])
-//   @@index([available])
-//   @@index([latitude, longitude])
-//   @@map("profiles")
-// }
-
-// // ============================================
-// // 2. REQUEST TABLE (Emergency Blood Requests)
-// // ============================================
-// model Request {
-//   id                  String    @id @default(cuid())
-  
-//   createdById         String
-//   createdBy           Profile   @relation("RequestCreator", fields: [createdById], references: [id], onDelete: Cascade)
-  
-//   bloodGroup          BloodGroup
-//   patientName         String
-  
-//   // Patient location
-//   patientLatitude     Float
-//   patientLongitude    Float
-//   patientLocationName String
-  
-//   contactPhone        String
-//   urgency             Urgency   @default(MEDIUM)
-//   unitsNeeded         Int       @default(1)
-//   hospitalName        String?
-//   notes               String?   @db.Text
-  
-//   status              RequestStatus @default(ACTIVE)
-//   fulfilledAt         DateTime?
-  
-//   createdAt           DateTime  @default(now())
-//   updatedAt           DateTime  @updatedAt
-  
-//   // Relations
-//   responses           Response[]
-//   donations           Donation[]
-  
-//   @@index([createdById])
-//   @@index([status])
-//   @@index([bloodGroup])
-//   @@index([patientLatitude, patientLongitude])
-//   @@map("requests")
-// }
-
-// // ============================================
-// // 3. DONATION TABLE (Donation History)
-// // ============================================
-// model Donation {
-//   id           String    @id @default(cuid())
-  
-//   donorId      String
-//   donor        Profile   @relation(fields: [donorId], references: [id], onDelete: Cascade)
-  
-//   requestId    String?
-//   request      Request?  @relation(fields: [requestId], references: [id], onDelete: SetNull)
-  
-//   donationDate DateTime  @db.Date
-//   unitsDonated Int       @default(1)
-//   hospitalName String?
-//   notes        String?   @db.Text
-  
-//   createdAt    DateTime  @default(now())
-  
-//   @@index([donorId])
-//   @@index([donationDate])
-//   @@map("donations")
-// }
-
-// // ============================================
-// // 4. RESPONSE TABLE (Donor Responses to Requests)
-// // ============================================
-// model Response {
-//   id        String    @id @default(cuid())
-  
-//   requestId String
-//   request   Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  
-//   donorId   String
-//   donor     Profile   @relation(fields: [donorId], references: [id], onDelete: Cascade)
-  
-//   status    ResponseStatus @default(PENDING)
-//   message   String?   @db.Text
-  
-//   createdAt DateTime  @default(now())
-//   updatedAt DateTime  @updatedAt
-  
-//   @@unique([requestId, donorId])  // One response per donor per request
-//   @@index([requestId])
-//   @@index([donorId])
-//   @@map("responses")
-// }
-
-// // ============================================
-// // ENUMS (Predefined Values)
-// // ============================================
-
-// enum BloodGroup {
-//   A_POSITIVE  @map("A+")
-//   A_NEGATIVE  @map("A-")
-//   B_POSITIVE  @map("B+")
-//   B_NEGATIVE  @map("B-")
-//   AB_POSITIVE @map("AB+")
-//   AB_NEGATIVE @map("AB-")
-//   O_POSITIVE  @map("O+")
-//   O_NEGATIVE  @map("O-")
-// }
-
-// enum Gender {
-//   MALE
-//   FEMALE
-//   OTHER
-// }
-
-// enum Role {
-//   DONOR      // Can donate blood
-//   RECIPIENT  // Only requests blood
-//   ADMIN      // Manages platform
-// }
-
-// enum Urgency {
-//   CRITICAL   // Life-threatening
-//   HIGH       // Urgent, within hours
-//   MEDIUM     // Within 24 hours
-//   LOW        // Planned donation
-// }
-
-// enum RequestStatus {
-//   ACTIVE     // Looking for donors
-//   FULFILLED  // Got donor
-//   CANCELLED  // Cancelled by creator
-// }
-
-// enum ResponseStatus {
-//   PENDING    // Donor said "I can help"
-//   ACCEPTED   // Request creator accepted
-//   DECLINED   // Donor changed mind
-// }
-
-
-
-
-
-
-
-
-
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
-  // url       = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  // Connection URLs for Migrate / Prisma Client have been moved to prisma.config.ts
+  // See: https://pris.ly/d/config-datasource and https://pris.ly/d/prisma7-client-config
 }
+
+
+// datasource db {
+//   provider  = "postgresql"
+//   // url       = env("DATABASE_URL")
+//   // directUrl = env("DIRECT_URL")
+// }
 
 // ============================================
 // 1. PROFILE TABLE (User Information)

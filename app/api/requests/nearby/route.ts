@@ -1,9 +1,10 @@
 
 
+
 // app/api/requests/nearby/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import  prisma  from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { calculateDistance } from '@/lib/utils/distance';
 import { getCompatibleDonors } from '@/lib/utils/bloodCompatibility';
 
@@ -32,6 +33,14 @@ export async function GET(req: Request) {
 
     if (!profile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    }
+
+    // Check if user has location data (same as donors API)
+    if (!profile.latitude || !profile.longitude) {
+      return NextResponse.json(
+        { error: 'Please complete your profile with location information first' },
+        { status: 400 }
+      );
     }
 
     // Build where clause
@@ -80,17 +89,22 @@ export async function GET(req: Request) {
 
         return {
           ...request,
-          distance, // btw user and the req user
-          canUserDonate, // blood group check
-          responseCount: request.responses.length, // till now how many responses
+          distance, // distance between user and the request
+          canUserDonate, // blood group compatibility check
+          responseCount: request.responses.length, // total responses so far
         };
       })
       .filter((request) => request.distance <= radiusKm)
       .sort((a, b) => a.distance - b.distance); // Sort by nearest first
 
-      
-    return NextResponse.json({ requests: requestsWithDistance });
-
+    // ✅ Return userLocation from profile (just like donors API)
+    return NextResponse.json({ 
+      requests: requestsWithDistance,
+      userLocation: {
+        latitude: profile.latitude,
+        longitude: profile.longitude,
+      },
+    });
 
   } catch (error) {
     console.error('Nearby requests error:', error);
