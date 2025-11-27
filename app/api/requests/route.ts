@@ -6,6 +6,7 @@ import prisma from '@/lib/prisma';
 import { createRequestSchema } from '@/lib/validations/request';
 import { getCompatibleDonors } from '@/lib/utils/bloodCompatibility';
 import { calculateDistance } from '@/lib/utils/distance';
+import { sendBatchEmails } from '@/lib/services/emailService';
 
 // POST - Create new request
 export async function POST(req: Request) {
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
       select: {
         id: true,
         name: true,
+        email: true,
         latitude: true,
         longitude: true,
         phone: true,
@@ -80,9 +82,34 @@ export async function POST(req: Request) {
       .sort((a, b) => a.distance - b.distance)
       .slice(0, 20); // Top 20 nearest
 
-    // *** Send notifications to nearby donors
-    // For now, just log the count
-    console.log(`Found ${nearbyDonors.length} matching donors nearby`);
+    // // *** Send notifications to nearby donors
+    // // For now, just log the count
+    // console.log(`Found ${nearbyDonors.length} matching donors nearby`);
+
+
+    if (nearbyDonors.length > 0) {
+      const emailPromises = nearbyDonors.map((donor) => ({
+        to: donor.email!,
+        type: 'NEW_REQUEST_NEARBY' as const,
+        data: {
+          userName: donor.name,
+          patientName: validatedData.patientName,
+          bloodGroup: validatedData.bloodGroup,
+          urgency: validatedData.urgency,
+          unitsNeeded: validatedData.unitsNeeded,
+          distance: donor.distance,
+          hospitalName: validatedData.hospitalName,
+          locationName: validatedData.patientLocationName,
+          requestId: request.id,
+        },
+      }));
+
+      // Send emails in batch (non-blocking)
+      sendBatchEmails(emailPromises).catch((err) => 
+        console.error('Failed to send notification emails:', err)
+      );
+    }
+
 
     return NextResponse.json(
       {

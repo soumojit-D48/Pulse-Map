@@ -5,6 +5,7 @@ import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import  prisma  from '@/lib/prisma';
 import { z } from 'zod';
+import { sendEmail } from '@/lib/services/emailService';
 
 const createResponseSchema = z.object({
   requestId: z.string(),
@@ -44,6 +45,13 @@ export async function POST(req: Request) {
         status: true,
         createdById: true,
         patientName: true,
+        bloodGroup: true,
+        createdBy: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
@@ -101,9 +109,24 @@ export async function POST(req: Request) {
         },
       },
     });
-
-    // TODO: Send notification to request creator
-    console.log(`${profile.name} responded to request for ${request.patientName}`);
+    
+    // notification to request creator
+    if (request.createdBy.email) {
+      sendEmail({
+        to: request.createdBy.email,
+        type: 'REQUEST_RESPONSE',
+        data: {
+          userName: request.createdBy.name,
+          patientName: request.patientName,
+          donorName: profile.name,
+          bloodGroup: request.bloodGroup,
+          responseMessage: message,
+          requestId: request.id,
+        },
+      }).catch((error) => {
+        console.error('Failed to send email notification:', error);
+      });
+    }
 
     return NextResponse.json(
       {

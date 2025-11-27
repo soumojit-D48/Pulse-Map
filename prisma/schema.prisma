@@ -54,6 +54,8 @@ model Profile {
   donationsGiven   Donation[] 
   requestsCreated  Request[]  @relation("RequestCreator")
   responses        Response[]
+
+  notifications    Notification[]
   
   @@index([clerkId])
   @@index([bloodGroup])
@@ -95,6 +97,8 @@ model Request {
   // Relations
   responses           Response[]
   donations           Donation[]
+
+  notifications    Notification[]
   
   @@index([createdById])
   @@index([status])
@@ -144,11 +148,57 @@ model Response {
   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  notifications    Notification[]
   
   @@unique([requestId, donorId])
   @@index([requestId])
   @@index([donorId])
   @@map("responses")
+}
+
+
+// ============================================
+// 5. NOTIFICATION TABLE (In-App Notifications)
+// ============================================
+model Notification {
+  id        String   @id @default(cuid())
+  
+  userId    String
+  user      Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type      NotificationType
+  title     String
+  message   String   @db.Text
+  link      String?  // URL to redirect when clicked
+  
+  read      Boolean  @default(false)
+  readAt    DateTime?
+  
+  // Optional: Link to related entities
+  requestId String?
+  request   Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  
+  responseId String?
+  response   Response? @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId, read])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  NEW_REQUEST_NEARBY    // New blood request in your area
+  REQUEST_RESPONSE      // Someone responded to your request
+  RESPONSE_ACCEPTED     // Your response was accepted
+  RESPONSE_DECLINED     // Your response was declined
+  REQUEST_FULFILLED     // Request you responded to is fulfilled
+  REQUEST_CANCELLED     // Request was cancelled
+  DONATION_REMINDER     // Reminder that you can donate again
+  PROFILE_INCOMPLETE    // Reminder to complete profile
+  SYSTEM_ANNOUNCEMENT   // Admin announcements
 }
 
 // ============================================
