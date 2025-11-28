@@ -10,7 +10,7 @@
 import { useState } from 'react';
 import { Heart, X } from 'lucide-react';
 import { toast } from 'sonner';
-import BloodGroupBadge from '@/components/dashboard/BloodGroupBadge';
+import BloodGroupBadge from '@/components/dashboard/temp';
 import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
 
 interface QuickDonateModalProps {

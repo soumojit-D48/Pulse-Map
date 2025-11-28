@@ -7,7 +7,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Plus, Filter, Trash2, Edit } from 'lucide-react';
-import BloodGroupBadge from '@/components/dashboard/BloodGroupBadge';
+import BloodGroupBadge from '@/components/dashboard/temp';
 import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
 import EditRequestDialog from '@/components/requests/EditRequestDialog';
 import DeleteRequestDialog from '@/components/requests/DeleteRequestDialog';
@@ -41,11 +41,11 @@ export default function RequestsPage() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'FULFILLED' | 'CANCELLED'>('ALL');
-  
+
   // Edit dialog state
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
-  
+
   // Delete dialog state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteRequestId, setDeleteRequestId] = useState<string | null>(null);
@@ -130,41 +130,37 @@ export default function RequestsPage() {
           <Filter size={20} className="text-muted-foreground" />
           <button
             onClick={() => setFilter('ALL')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              filter === 'ALL'
+            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'ALL'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
+              }`}
           >
             All
           </button>
           <button
             onClick={() => setFilter('ACTIVE')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              filter === 'ACTIVE'
+            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'ACTIVE'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
+              }`}
           >
             Active
           </button>
           <button
             onClick={() => setFilter('FULFILLED')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              filter === 'FULFILLED'
+            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'FULFILLED'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
+              }`}
           >
             Fulfilled
           </button>
           <button
             onClick={() => setFilter('CANCELLED')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              filter === 'CANCELLED'
+            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'CANCELLED'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
+              }`}
           >
             Cancelled
           </button>
@@ -282,7 +278,7 @@ export default function RequestsPage() {
                 >
                   View Details
                 </Link>
-                
+
                 {request.status === 'ACTIVE' && (
                   <>
                     <button

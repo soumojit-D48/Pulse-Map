@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { MapPin, Calendar, Phone, User, Eye } from 'lucide-react';
-import BloodGroupBadge from '@/components/dashboard/BloodGroupBadge';
+import BloodGroupBadge from '@/components/dashboard/temp';
 import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
 import ResponseStatusBadge from '@/components/responsess/ResponseStatusBadge';
 import DonorResponseActions from '@/components/responsess/DonorResponseActions';
@@ -111,19 +111,18 @@ export default function MyResponsesPage() {
       {/* Filter Tabs */}
       <div className="bg-card rounded-lg shadow-soft p-2 flex gap-2">
         {(['ALL', 'PENDING', 'ACCEPTED', 'DECLINED'] as const).map((status) => {
-          const count = status === 'ALL' 
-            ? responses.length 
+          const count = status === 'ALL'
+            ? responses.length
             : responses.filter(r => r.status === status).length;
-          
+
           return (
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`flex-1 px-4 py-2 rounded-md font-medium transition ${
-                filter === status
+              className={`flex-1 px-4 py-2 rounded-md font-medium transition ${filter === status
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-muted'
-              }`}
+                }`}
             >
               {status} ({count})
             </button>

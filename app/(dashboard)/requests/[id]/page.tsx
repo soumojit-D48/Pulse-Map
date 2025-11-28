@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, MapPin, Phone, User } from 'lucide-react';
-import BloodGroupBadge from '@/components/dashboard/BloodGroupBadge';
+import BloodGroupBadge from '@/components/dashboard/temp';
 import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
 import { toast } from 'sonner';
 
@@ -257,7 +257,7 @@ export default function RequestDetailPage() {
           <div className="space-y-3">
             {request.responses.map((response) => {
               const isDonor = userProfileId === response.donor.id;
-              
+
               return (
                 <div
                   key={response.id}
@@ -287,7 +287,7 @@ export default function RequestDetailPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <ResponseStatusBadge status={response.status} size="sm" />
-                      
+
                       {/* Show ResponseActions for request creator */}
                       {isCreator && request.status === 'ACTIVE' && (
                         <ResponseActions
@@ -298,12 +298,12 @@ export default function RequestDetailPage() {
                           onSuccess={fetchRequestDetail}
                         />
                       )}
-                      
+
                       {/* Show DonorResponseActions for the donor */}
                       {isDonor && !isCreator && (
                         // console.log(isDonor, "d"),
                         // console.log( isCreator,"r"),
-                        
+
                         <DonorResponseActions
                           responseId={response.id}
                           currentMessage={response.message}
