@@ -301,8 +301,8 @@ export default function RequestDetailPage() {
                       
                       {/* Show DonorResponseActions for the donor */}
                       {isDonor && !isCreator && (
-                        console.log(isDonor, "d"),
-                        console.log( isCreator,"r"),
+                        // console.log(isDonor, "d"),
+                        // console.log( isCreator,"r"),
                         
                         <DonorResponseActions
                           responseId={response.id}

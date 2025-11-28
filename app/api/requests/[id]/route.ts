@@ -15,7 +15,7 @@ export async function GET(
   ctx: { params: Promise<{ id: string }> }
 ) {
   const { id } = await ctx.params;
-  console.log("GET Request ID:", id);
+  // console.log("GET Request ID:", id);
 
   if (!id) {
     return NextResponse.json({ error: "Missing request ID" }, { status: 400 });
@@ -40,7 +40,7 @@ export async function GET(
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
-    console.log('Current user profile ID:', profile.id); // Debug log
+    // console.log('Current user profile ID:', profile.id); // Debug log
 
     const request = await prisma.request.findUnique({
       where: { id },
@@ -84,13 +84,13 @@ export async function GET(
     const compatibleDonors = getCompatibleDonors(request.bloodGroup as any);
     const canUserDonate = compatibleDonors.includes(profile.bloodGroup as any);
 
-    console.log('Response data:', {
-      userProfileId: profile.id,
-      isCreator,
-      hasResponded,
-      canUserDonate,
-      responseDonorIds: request.responses.map(r => r.donorId)
-    }); // Debug log
+    // console.log('Response data:', {
+    //   userProfileId: profile.id,
+    //   isCreator,
+    //   hasResponded,
+    //   canUserDonate,
+    //   responseDonorIds: request.responses.map(r => r.donorId)
+    // }); 
 
     return NextResponse.json({
       request,
@@ -116,7 +116,7 @@ export async function PATCH(
   ctx: { params: Promise<{ id: string }> }
 ) {
   const { id } = await ctx.params;
-  console.log("PATCH Request ID:", id);
+  // console.log("PATCH Request ID:", id);
 
   if (!id) {
     return NextResponse.json({ error: "Missing request ID" }, { status: 400 });

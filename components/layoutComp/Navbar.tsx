@@ -92,7 +92,7 @@ const Navbar = () => {
             </SignedOut>
 
             <SignedIn>
-              <Link href="/dashboard">
+              <Link href="/home">
                 <Button className="bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">
                   Dashboard
                 </Button>

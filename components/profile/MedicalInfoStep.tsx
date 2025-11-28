@@ -48,7 +48,7 @@ export default function MedicalInfoStep() {
 
   const onSubmit = (data: MedicalInfoFormData) => {
     updateFormData(data);
-    console.log(data, "data");
+    // console.log(data, "data");
     nextStep();
   };
 

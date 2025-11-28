@@ -78,13 +78,13 @@ export async function GET() {
       return distance <= 220; // 20 or 220
     }).length;
 
-    // Log 
-    console.log('Dashboard Stats:', {
-      totalDonations,
-      nearbyActiveRequests,
-      nearbyDonors,
-      userId: profile.id,
-    });
+    
+    // console.log('Dashboard Stats:', {
+    //   totalDonations,
+    //   nearbyActiveRequests,
+    //   nearbyDonors,
+    //   userId: profile.id,
+    // });
 
     // Return the statistics
     return NextResponse.json({

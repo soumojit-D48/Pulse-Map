@@ -37,7 +37,7 @@ export default function PersonalInfoStep() {
   const onSubmit = (data: PersonalInfoFormData) => {
     updateFormData(data);
     nextStep();
-    console.log(data, "djbbhjkbkda");
+    // console.log(data, "djbbhjkbkda");
   };
 
   return (

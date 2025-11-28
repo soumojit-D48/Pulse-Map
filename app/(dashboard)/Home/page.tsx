@@ -53,7 +53,7 @@ export default function DashboardHomePage() {
     try {
       setStatsLoading(true);
       const statsRes = await fetch('/api/dashboard/stats');
-      console.log(statsRes, "sdjsjk");
+      // console.log(statsRes, "sdjsjk");
       
       
       if (!statsRes.ok) {
@@ -85,7 +85,7 @@ export default function DashboardHomePage() {
       
       const requestsData = await requestsRes.json();
       setRequests(requestsData.requests || []);
-      console.log(requestsData.requests, "rrrr");
+      // console.log(requestsData.requests, "rrrr");
       
     } catch (error) {
       console.error('Failed to fetch requests:', error);

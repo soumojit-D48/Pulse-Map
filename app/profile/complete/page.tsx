@@ -141,7 +141,7 @@ const handleNext = () => {
 
       toast.success('Profile completed successfully!');
       resetForm();
-      router.push('/dashboard');
+      router.push('/home');
     } catch (error: any) {
       console.error('Profile creation error:', error);
       toast.error(error.message || 'Failed to complete profile. Please try again.');

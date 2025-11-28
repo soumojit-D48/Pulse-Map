@@ -57,7 +57,7 @@ const getEmailContent = (type: EmailNotificationType, data: any) => {
               <li>Location: ${data.locationName}</li>
             </ul>
             <p>You'll now receive notifications when someone nearby needs your blood type.</p>
-            <a href="${baseUrl}/dashboard" style="display: inline-block; padding: 12px 24px; background-color: #dc2626; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">
+            <a href="${baseUrl}/home" style="display: inline-block; padding: 12px 24px; background-color: #dc2626; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">
               Go to Dashboard
             </a>
             <p style="margin-top: 24px; color: #666; font-size: 14px;">
@@ -277,7 +277,7 @@ export async function sendEmail({ to, type, data }: EmailData) {
       html,
     });
 
-    console.log('Email sent:', info.messageId);
+    // console.log('Email sent:', info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('Email send error:', error);
@@ -294,7 +294,7 @@ export async function sendBatchEmails(emails: EmailData[]) {
   const successful = results.filter((r) => r.status === 'fulfilled').length;
   const failed = results.filter((r) => r.status === 'rejected').length;
 
-  console.log(`Batch email results: ${successful} sent, ${failed} failed`);
+  // console.log(`Batch email results: ${successful} sent, ${failed} failed`);
   
   return { successful, failed, total: emails.length };
 }
