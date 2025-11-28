@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Users, FileText, Heart, User, Menu, X, Plus, HeartHandshake, PlusCircle, MapPin, Inbox } from 'lucide-react';
 import { useState } from 'react';
-import BloodGroupBadge from '../dashboard/BloodGroupBadge';
+import BloodGroupBadge from '@/components/dashboard/BloodGroupBadge';
 
 interface SidebarProps {
   profile: {
@@ -35,7 +35,7 @@ const navigation = [
   // { name: 'Nearby Requests', href: 'nearby-requests', icon: Plus },
   // { name: 'My Responses', href: '/responses', icon: Plus },
 
-  
+
   { name: "Dashboard", href: "/home", icon: Home },
   { name: "Find Donors", href: "/donors", icon: Users },
   { name: "My Requests", href: "/requests", icon: FileText },
@@ -101,8 +101,8 @@ export default function Sidebar({ profile }: SidebarProps) {
                   <BloodGroupBadge bloodGroup={profile.bloodGroup} size="sm" />
                   <span
                     className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${profile.available
-                        ? 'bg-accent/10 text-accent'
-                        : 'bg-muted text-muted-foreground'
+                      ? 'bg-accent/10 text-accent'
+                      : 'bg-muted text-muted-foreground'
                       }`}
                   >
                     <span
@@ -220,7 +220,7 @@ export default function Sidebar({ profile }: SidebarProps) {
 //       {/* Sidebar */}
 //       <aside
 //         className={`
-//           fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 
+//           fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200
 //           transform transition-transform duration-300 ease-in-out
 //           lg:translate-x-0
 //           ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
