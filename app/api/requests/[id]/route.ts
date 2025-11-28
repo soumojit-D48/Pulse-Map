@@ -5,7 +5,7 @@
 // app/api/requests/[id]/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/lib/prisma';
 import { getCompatibleDonors } from '@/lib/utils/bloodCompatibility';
 
 
@@ -212,7 +212,7 @@ export async function PATCH(
 // // app/api/requests/[id]/route.ts
 // import { auth } from '@clerk/nextjs/server';
 // import { NextResponse } from 'next/server';
-// import prisma from '@/lib/prisma';
+// import {prisma} from '@/lib/prisma';
 
 
 // // here the person who requested the blood donation 

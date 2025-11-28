@@ -5,7 +5,7 @@
 // app/api/dashboard/stats/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { calculateDistance } from '@/lib/utils/distance';
 
 export async function GET() {
@@ -78,7 +78,7 @@ export async function GET() {
       return distance <= 220; // 20 or 220
     }).length;
 
-    
+
     // console.log('Dashboard Stats:', {
     //   totalDonations,
     //   nearbyActiveRequests,

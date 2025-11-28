@@ -5,10 +5,11 @@
 // app/api/profile/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextRequest,NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/lib/prisma';
 import { completeProfileSchema } from '@/lib/validations/profile';
 import { z } from 'zod';
 import { sendEmail } from '@/lib/services/emailService';
+import { BloodGroup } from '@prisma/client';
 
 
 export async function POST(req: NextRequest) {
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
         email: body.email,
         name: validatedData.name,
         phone: validatedData.phone,
-        bloodGroup: validatedData.bloodGroup,
+        bloodGroup: validatedData.bloodGroup as BloodGroup,
         age: validatedData.age,
         gender: validatedData.gender,
         state: validatedData.state,
@@ -304,7 +305,7 @@ export async function PATCH(req: Request) {
 // // app/api/profile/route.ts
 // import { NextRequest, NextResponse } from 'next/server';
 // import { auth } from '@clerk/nextjs/server';
-// import prisma from '@/lib/prisma';
+// import {prisma} from '@/lib/prisma';
 // import { completeProfileSchema } from '@/lib/validations/profile';
 // import { z } from 'zod';
 

@@ -3,7 +3,7 @@
 // app/api/responses/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import  prisma  from '@/lib/prisma';
+import  {prisma}  from '@/lib/prisma';
 import { z } from 'zod';
 import { sendEmail } from '@/lib/services/emailService';
 

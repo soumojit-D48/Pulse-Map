@@ -4,7 +4,7 @@
 // app/api/requests/nearby/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { calculateDistance } from '@/lib/utils/distance';
 import { getCompatibleDonors } from '@/lib/utils/bloodCompatibility';
 
@@ -98,7 +98,7 @@ export async function GET(req: Request) {
       .sort((a, b) => a.distance - b.distance); // Sort by nearest first
 
     // ✅ Return userLocation from profile (just like donors API)
-    return NextResponse.json({ 
+    return NextResponse.json({
       requests: requestsWithDistance,
       userLocation: {
         latitude: profile.latitude,

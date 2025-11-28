@@ -2,7 +2,7 @@
 
 // import { auth } from '@clerk/nextjs/server';
 // import { redirect } from 'next/navigation';
-// import prisma from '@/lib/prisma';
+// import {prisma} from '@/lib/prisma';
 // import Sidebar from '@/components/layoutComp/Sidebar';
 // import Header from '@/components/dashboard/Header';
 // import MobileNav from '@/components/layoutComp/MobileNav';
@@ -70,7 +70,7 @@
 
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import Sidebar from '@/components/layoutComp/Sidebar';
 import Header from '@/components/dashboard/Header';
 import MobileNav from '@/components/layoutComp/MobileNav';

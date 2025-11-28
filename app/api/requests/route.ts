@@ -2,11 +2,12 @@
 // app/api/requests/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { createRequestSchema } from '@/lib/validations/request';
 import { getCompatibleDonors } from '@/lib/utils/bloodCompatibility';
 import { calculateDistance } from '@/lib/utils/distance';
 import { sendBatchEmails } from '@/lib/services/emailService';
+import { BloodGroup } from '@prisma/client';
 
 // POST - Create new request
 export async function POST(req: Request) {
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
       data: {
         createdById: profile.id,
         patientName: validatedData.patientName,
-        bloodGroup: validatedData.bloodGroup,
+        bloodGroup: validatedData.bloodGroup as BloodGroup,
         contactPhone: validatedData.contactPhone,
         urgency: validatedData.urgency,
         unitsNeeded: validatedData.unitsNeeded,
@@ -53,7 +54,7 @@ export async function POST(req: Request) {
 
     const donors = await prisma.profile.findMany({
       where: {
-        bloodGroup: { in: compatibleBloodGroups },
+        bloodGroup: { in: compatibleBloodGroups as unknown as BloodGroup[] },
         available: true,
         id: { not: profile.id }, // Exclude request creator
       },
@@ -105,7 +106,7 @@ export async function POST(req: Request) {
       }));
 
       // Send emails in batch (non-blocking)
-      sendBatchEmails(emailPromises).catch((err) => 
+      sendBatchEmails(emailPromises).catch((err) =>
         console.error('Failed to send notification emails:', err)
       );
     }
@@ -252,10 +253,10 @@ export async function PATCH(req: Request) {
     }
 
     const body = await req.json();
-    
+
     // Validate update data (partial validation)
     const updateData: any = {};
-    
+
     if (body.patientName) updateData.patientName = body.patientName;
     if (body.bloodGroup) updateData.bloodGroup = body.bloodGroup;
     if (body.contactPhone) updateData.contactPhone = body.contactPhone;

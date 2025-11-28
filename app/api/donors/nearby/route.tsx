@@ -6,7 +6,7 @@
 // app/api/donors/nearby/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/lib/prisma';
 
 // Haversine formula to calculate distance between two points
 function calculateDistance(
@@ -200,7 +200,7 @@ export async function GET(req: Request) {
 // // app/api/donors/nearby/route.ts
 // import { auth } from '@clerk/nextjs/server';
 // import { NextResponse } from 'next/server';
-// import prisma from '@/lib/prisma';
+// import {prisma} from '@/lib/prisma';
 
 // // Haversine formula to calculate distance between two points
 // function calculateDistance(
