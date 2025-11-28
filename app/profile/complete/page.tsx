@@ -10,10 +10,25 @@ import { useProfileStore } from '@/store/profileStore';
 import StepIndicator from '@/components/profile/StepIndicator';
 import PersonalInfoStep from '@/components/profile/PersonalInfoStep';
 import MedicalInfoStep from '@/components/profile/MedicalInfoStep';
-import LocationStep from '@/components/profile/LocationStep';
+// import LocationStep from '@/components/profile/LocationStep';
 import AvailabilityStep from '@/components/profile/AvailabilityStep';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import dynamic from 'next/dynamic';
+
+// export const dynamic = 'force-dynamic';
+
+const LocationStep = dynamic(
+  () => import('@/components/profile/LocationStep'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
+      </div>
+    )
+  }
+);
 
 export default function CompleteProfilePage() {
   const router = useRouter();
