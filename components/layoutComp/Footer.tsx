@@ -13,7 +13,7 @@ const Footer = () => {
                 <Droplet className="w-6 h-6 text-primary-foreground" fill="currentColor" />
               </div>
               <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                LifeLink
+                Pulse Map
               </span>
             </div>
             <p className="text-muted-foreground max-w-md">
@@ -66,7 +66,7 @@ const Footer = () => {
         </div>
 
         <div className="pt-8 border-t border-border text-center text-muted-foreground">
-          <p>© 2024 LifeLink. All rights reserved. Saving lives together.</p>
+          <p>© 2024 Pulse Map. All rights reserved. Saving lives together.</p>
         </div>
       </div>
     </footer>
