@@ -26,7 +26,7 @@ interface SidebarProps {
 }
 
 const navigation = [
-  // { name: 'Dashboard', href: '/home', icon: Home },
+  // { name: 'Dashboard', href: '/Home', icon: Home },
   // { name: 'Find Donors', href: '/donors', icon: Users },
   // { name: 'My Requests', href: '/requests', icon: FileText },
   // { name: 'Donations', href: '/donation-history', icon: Heart },
@@ -36,7 +36,7 @@ const navigation = [
   // { name: 'My Responses', href: '/responses', icon: Plus },
 
 
-  { name: "Dashboard", href: "/home", icon: Home },
+  { name: "Dashboard", href: "/Home", icon: Home },
   { name: "Find Donors", href: "/donors", icon: Users },
   { name: "My Requests", href: "/requests", icon: FileText },
   { name: "Donations", href: "/donation-history", icon: HeartHandshake },
@@ -196,7 +196,7 @@ export default function Sidebar({ profile }: SidebarProps) {
 // }
 
 // const navigation = [
-//   { name: 'Dashboard', href: '/home', icon: Home },
+//   { name: 'Dashboard', href: '/Home', icon: Home },
 //   { name: 'Find Donors', href: '/donors', icon: Users },
 //   { name: 'My Requests', href: '/requests', icon: FileText },
 //   { name: 'Donations', href: '/donations', icon: Heart },

@@ -20,7 +20,7 @@ import dynamic from 'next/dynamic';
 
 const LocationStep = dynamic(
   () => import('@/components/profile/LocationStep'),
-  { 
+  {
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center h-96">
@@ -39,7 +39,7 @@ export default function CompleteProfilePage() {
   // Validation for each step
   const validateStep = (step: number): boolean => {
     switch (step) {
-      case 1:   
+      case 1:
         if (!formData.name || !formData.phone || !formData.age || !formData.gender) {
           toast.error('Please fill all required fields');
           return false;
@@ -76,39 +76,39 @@ export default function CompleteProfilePage() {
     }
   };
 
-//   const handleNext = () => {
-//     if (validateStep(currentStep)) {
-//       nextStep();
-//     }
-//   };
+  //   const handleNext = () => {
+  //     if (validateStep(currentStep)) {
+  //       nextStep();
+  //     }
+  //   };
 
 
 
-const handleNext = () => {
-  if (currentStep === 1) {
+  const handleNext = () => {
+    if (currentStep === 1) {
 
-    const form = document.getElementById("personal-info-form") as HTMLFormElement | null;
+      const form = document.getElementById("personal-info-form") as HTMLFormElement | null;
 
-  if (form) {
-    form.requestSubmit();  
-  }
-  return
-  }
+      if (form) {
+        form.requestSubmit();
+      }
+      return
+    }
 
-  if (currentStep === 2) {
- 
-    const form = document.getElementById("medical-info-form") as HTMLFormElement | null;
+    if (currentStep === 2) {
 
-  if (form) {
-    form.requestSubmit();  
-  }
-  return
-  }
+      const form = document.getElementById("medical-info-form") as HTMLFormElement | null;
 
-  if (validateStep(currentStep)) {
-    nextStep();
-  }
-};
+      if (form) {
+        form.requestSubmit();
+      }
+      return
+    }
+
+    if (validateStep(currentStep)) {
+      nextStep();
+    }
+  };
 
   const handleBack = () => {
     prevStep();
@@ -156,7 +156,7 @@ const handleNext = () => {
 
       toast.success('Profile completed successfully!');
       resetForm();
-      router.push('/home');
+      router.push('/Home');
     } catch (error: any) {
       console.error('Profile creation error:', error);
       toast.error(error.message || 'Failed to complete profile. Please try again.');

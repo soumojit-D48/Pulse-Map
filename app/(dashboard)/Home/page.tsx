@@ -1,6 +1,6 @@
 
 
-// app/(dashboard)/home/page.tsx
+// app/(dashboard)/Home/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -54,15 +54,15 @@ export default function DashboardHomePage() {
       setStatsLoading(true);
       const statsRes = await fetch('/api/dashboard/stats');
       // console.log(statsRes, "sdjsjk");
-      
-      
+
+
       if (!statsRes.ok) {
         throw new Error('Failed to fetch statistics');
       }
-      
+
       const statsData = await statsRes.json();
       console.log(statsData, "data");
-      
+
       setStats(statsData);
     } catch (error) {
       console.error('Failed to fetch dashboard stats:', error);
@@ -78,15 +78,15 @@ export default function DashboardHomePage() {
       const requestsRes = await fetch(
         `/api/requests/nearby?radius=50${filterBloodGroup ? `&bloodGroup=${filterBloodGroup}` : ''}`
       );
-      
+
       if (!requestsRes.ok) {
         throw new Error('Failed to fetch requests');
       }
-      
+
       const requestsData = await requestsRes.json();
       setRequests(requestsData.requests || []);
       // console.log(requestsData.requests, "rrrr");
-      
+
     } catch (error) {
       console.error('Failed to fetch requests:', error);
     } finally {
@@ -97,8 +97,8 @@ export default function DashboardHomePage() {
   const handleResponseSuccess = () => {
     // Refresh requests after successful response
     fetchRequests();
-    
-    
+
+
   };
 
   return (
@@ -174,7 +174,7 @@ export default function DashboardHomePage() {
                 Help someone in need today
               </p>
             </div>
-            
+
             <div className="flex gap-3">
               <select
                 value={filterBloodGroup}

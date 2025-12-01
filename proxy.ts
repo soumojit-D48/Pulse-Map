@@ -14,7 +14,7 @@
 
 // // Routes requiring profile check
 // const requiresProfileCheck = createRouteMatcher([
-//   '/home(.*)',
+//   '/Home(.*)',
 //   '/donors(.*)',
 //   '/requests(.*)',
 //   '/donation-history(.*)',
@@ -66,7 +66,7 @@
 //       if (pathname.startsWith('/profile/complete')) {
 //         if (profile?.profileCompleted) {
 //           return NextResponse.redirect(
-//             new URL('/home', req.url)
+//             new URL('/Home', req.url)
 //           );
 //         }
 //         return NextResponse.next();
@@ -101,7 +101,7 @@
 // ]);
 
 // const requiresProfileCheck = createRouteMatcher([
-//   '/home(.*)',
+//   '/Home(.*)',
 //   '/donors(.*)',
 //   '/requests(.*)',
 //   '/donation-history(.*)',
@@ -172,7 +172,7 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 const requiresProfileCheck = createRouteMatcher([
-  '/home(.*)',
+  '/Home(.*)',
   '/donors(.*)',
   '/requests(.*)',
   '/donation-history(.*)',

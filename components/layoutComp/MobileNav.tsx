@@ -9,14 +9,14 @@ import { usePathname } from 'next/navigation';
 import { Home, Users, FileText, Heart, User, Plus } from 'lucide-react';
 
 const navigation = [
-  { name: 'Home', href: '/home', icon: Home },
+  { name: 'Home', href: '/Home', icon: Home },
   { name: 'Donors', href: '/donors', icon: Users },
   { name: 'Create ', href: '/requests/new', icon: Plus },
   { name: 'Requests', href: '/requests', icon: FileText },
   { name: 'Donations', href: '/donation-history', icon: Heart },
   { name: 'Profile', href: '/profile', icon: User },
-    
-  
+
+
 ];
 
 export default function MobileNav() {
