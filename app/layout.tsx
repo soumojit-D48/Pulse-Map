@@ -100,7 +100,7 @@ import { ThemeProvider } from '../components/theme-provider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Blood Donation App',
+  title: 'Pulse Map',
   description: 'Connect blood donors with those in need',
 }
 
